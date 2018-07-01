@@ -42,13 +42,13 @@ public class EspressoTest {
      *
      * @throws Exception
      */
-    @Test
+    /*@Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.acme.a3csci3130", appContext.getPackageName());
-    }
+    }*/
 
     /**
      * Test to create a business
@@ -72,7 +72,6 @@ public class EspressoTest {
      */
     @Test
    public void ReadTest() {
-
         onData(anything()).inAdapterView(withId(R.id.listView)).atPosition(0).perform(click());
 
         onView(withId(R.id.businessNum)).check(matches(withText("123456789")));
@@ -87,6 +86,14 @@ public class EspressoTest {
     @Test
     public void UpdateTest() {
 
+        onView(withId(R.id.submitButton)).perform(click());
+        onView(withId(R.id.businessNum)).perform(typeText("987654321"));
+        onView(withId(R.id.businessName)).perform(typeText("Leigh's"));
+        onView(withId(R.id.primaryBusiness)).perform(typeText("Fisher"));
+        onView(withId(R.id.businessAddress)).perform(typeText("203 Barrington Street"));
+        onView(withId(R.id.province)).perform(typeText("NS"));
+
+        onView(withId(R.id.submitButton)).perform(click());
         onData(anything()).inAdapterView(withId(R.id.listView)).atPosition(0).perform(click());
 
         onView(withId(R.id.businessNum)).perform(clearText(), typeText("012345678"));
@@ -96,6 +103,13 @@ public class EspressoTest {
         onView(withId(R.id.province)).perform(clearText(), typeText("NB"));
         onView(withId(R.id.updateButton)).perform(click());
         onData(anything()).inAdapterView(withId(R.id.listView)).atPosition(0).check(matches(isDisplayed()));
+
+        onData(anything()).inAdapterView(withId(R.id.listView)).atPosition(0).perform(click());
+        onView(withId(R.id.businessNum)).check(matches(withText("012345678")));
+        onView(withId(R.id.businessName)).check(matches(withText("Fermin's")));
+        onView(withId(R.id.primaryBusiness)).check(matches(withText("Processor")));
+        onView(withId(R.id.businessAddress)).check(matches(withText("105 Compton Street")));
+        onView(withId(R.id.province)).check(matches(withText("NB")));
     }
     /**
      * For testing the delete functionality
@@ -106,6 +120,5 @@ public class EspressoTest {
         onData(anything()).inAdapterView(withId(R.id.listView)).atPosition(0).perform(click());
 
         onView(withId(R.id.deleteButton)).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.listView)).atPosition(0).check(matches(isDisplayed()));
     }
 }
