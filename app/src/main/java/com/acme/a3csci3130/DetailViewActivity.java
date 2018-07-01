@@ -4,34 +4,63 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import android.widget.EditText;
 
 public class DetailViewActivity extends Activity {
 
-    private EditText nameField, emailField;
-    Contact receivedPersonInfo;
+    private EditText numField, nameField, primaryField, addressField, provinceField;
+    Business receivedBusinessInfo;
+    private MyApplicationData appState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_view);
-        receivedPersonInfo = (Contact)getIntent().getSerializableExtra("Contact");
+        receivedBusinessInfo = (Business)getIntent().getSerializableExtra("Business");
+        appState = ((MyApplicationData) getApplicationContext());
 
-        nameField = (EditText) findViewById(R.id.name);
-        emailField = (EditText) findViewById(R.id.email);
+        numField = (EditText) findViewById(R.id.businessNum);
+        nameField = (EditText) findViewById(R.id.businessName);
+        primaryField = (EditText) findViewById(R.id.primaryBusiness);
+        addressField = (EditText) findViewById(R.id.businessAddress);
+        provinceField = (EditText) findViewById(R.id.province);
 
-        if(receivedPersonInfo != null){
-            nameField.setText(receivedPersonInfo.name);
-            emailField.setText(receivedPersonInfo.email);
+        if(receivedBusinessInfo != null){
+            numField.setText(receivedBusinessInfo.businessNumber);
+            nameField.setText(receivedBusinessInfo.businessName);
+            primaryField.setText(receivedBusinessInfo.primaryBusiness);
+            addressField.setText(receivedBusinessInfo.address);
+            provinceField.setText(receivedBusinessInfo.province);
+
         }
     }
+    /**
+    *Method for updating business
+    * @param v
+    */
+    public void updateBusiness(View v){
+        String businessID = receivedBusinessInfo.uid;
+        String businessNum = numField.getText().toString();
+        String businessName = nameField.getText().toString();
+        String primaryBusiness = primaryField.getText().toString();
+        String businessAdd = addressField.getText().toString();
+        String province = provinceField.getText().toString();
 
-    public void updateContact(View v){
-        //TODO: Update contact funcionality
+
+        Business updateBusiness = new Business(businessID,businessNum, businessName, primaryBusiness, businessAdd, province);
+
+        appState.firebaseReference.child(businessID).setValue(updateBusiness);
+        finish();
     }
 
-    public void eraseContact(View v)
+    /**
+    * Method for erasing a business
+    * @param v
+    */
+    public void eraseBusiness(View v)
     {
-        //TODO: Erase contact functionality
+        appState.firebaseReference.child(receivedBusinessInfo.uid).removeValue();
+        finish();
     }
 }
